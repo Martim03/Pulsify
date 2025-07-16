@@ -3,7 +3,7 @@ import { Tabs } from "expo-router";
 import { StyleSheet } from "react-native";
 import { Colors } from "../constants/Colors";
 
-// * TODO - Change icons when active
+// TODO - Change icons when active
 
 export default function Layout() {
   return (
