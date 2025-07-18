@@ -1,6 +1,6 @@
 import { SpotifyAPI } from "@/app/constants/SpotifyAPI";
 import * as AuthSession from "expo-auth-session";
-import * as Random from "expo-random";
+import * as ExpoCrypto from "expo-crypto";
 import { sha256 } from "js-sha256";
 import { base64URLEncode } from "../conversions";
 import {
@@ -22,8 +22,8 @@ const discovery = {
  *
  * @returns {Promise<{ code: string, codeVerifier: string }>} - The authorization code and code verifier
  */
-export async function authenticateWithSpotify() {
-  const randomBytes = await Random.getRandomBytesAsync(32);
+export async function sendSpotifyAuthRequest() {
+  const randomBytes = await ExpoCrypto.getRandomBytesAsync(32);
   const codeVerifier = base64URLEncode(randomBytes);
   const codeChallenge = base64URLEncode(sha256(codeVerifier));
 

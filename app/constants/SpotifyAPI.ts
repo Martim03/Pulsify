@@ -1,6 +1,6 @@
 export const SpotifyAPI = {
   clientId: "f479b21f61544490b37ae22e07746cd5",
-  redirectURI: "#1db954",
+  redirectURI: "exp://192.168.1.78:8081",
   scopes: [
     "playlist-modify-public",
     "user-follow-read",

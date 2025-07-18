@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Colors } from "../constants/Colors";
 import { LoginViewModel } from "../viewModels/LoginViewModel";
@@ -6,15 +6,33 @@ import { LoginViewModel } from "../viewModels/LoginViewModel";
 export default function Login() {
   const viewModel = useRef(new LoginViewModel()).current;
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Wrapper function to handle loading component
+  // This function will set the loading state before and after the async operation
+  const asyncLoadingWrapper = async (func: () => Promise<void>) => {
+    setIsLoading(true);
+    await func();
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    viewModel.onSreenLoad();
+    asyncLoadingWrapper(async () => {
+      const success = await viewModel.tryLoadValidToken();
+      setIsLoggedIn(success);
+    });
   }, []);
 
   // Wrapper function to handle login click
   const handleLogin = async () => {
-    await viewModel.onLoginClick();
+    asyncLoadingWrapper(async () => {
+      const success = await viewModel.login();
+      setIsLoggedIn(success);
+    });
   };
 
+  // ! TODO - Handle login
   return (
     <View style={styles.container}>
       {/* Title */}
@@ -28,9 +46,15 @@ export default function Login() {
       />
 
       {/* Login Button */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login with Spotify</Text>
-      </TouchableOpacity>
+
+      {isLoading ? (
+        // ! TODO - Exchange for loading component
+        <Text> Logged! </Text>
+      ) : (
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login with Spotify</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
